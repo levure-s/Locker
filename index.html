@@ -1,0 +1,60 @@
+<html><head><link rel="stylesheet" href="./style.css"></head>
+<body><script src="/socket.io/socket.io.js"></script>
+    <script>
+        window.onload = function () {connectSocket();};
+        
+        var socket;
+        function connectSocket() {
+            
+            socket = io();
+            socket.on('msg', function(msg) {
+                console.log("(C1) connectSocket()");
+            });
+
+            socket.on("notice_openLocker",(msg) =>{
+                console.log(JSON.parse(msg).num)
+                info(JSON.parse(msg))
+            });
+            socket.connect();
+        }
+        function openLocker(){
+            door = document.getElementsByName("door")
+            for(let i=0;i<door.length;i++){
+                if(door[i].checked){
+                    num = door[i].value;
+                    break;
+                }
+            }
+            console.log("door:"+ num)
+            socket.emit('call_openLocker', num);
+        }
+        function info(j){
+            console.log(j.log)
+            if(j.log){
+                console.log(j.num)
+                var result;
+                switch(j.num){
+                    case "0":result = "玄関が開きました"; break;
+                    case "1":result = "部屋の扉が開きました"; break;
+                    case "2":result = "金庫が開きました"; break;
+                    case "3":result = "クローゼットが開きました"; break;
+                }
+                document.getElementById("result").innerHTML = result
+            }
+        }
+        
+        
+    </script>
+    <main>
+        
+        <input type="radio" name="door" value="0">玄関
+        <input type="radio" name="door" value="1">部屋
+        <input type="radio" name="door" value="2">金庫
+        <input type="radio" name="door" value="3">クローゼット
+        
+    <br />
+    <input type="button" value="openLocker" onclick="openLocker();"/><br /><br />
+    <font color="red"><span id="result"></span></font>
+    </main>
+    
+</body></html>

@@ -1,0 +1,12 @@
+div.scrollarea {
+    width: 600px;
+    height: 500px;
+    line-height: 100%;
+    background-color: silver;
+    overflow: scroll;
+    word-wrap: break-word;
+}
+ul {
+    list-style: none;
+}
+
